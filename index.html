@@ -309,6 +309,8 @@
 
     <!-- Footer -->
     <div class="footer-links">
+      <a href="/api/export" download="submissions.csv">Download Submissions (CSV)</a>
+      <span class="sep">|</span>
       <a href="#">Privacy Policy</a>
       <span class="sep">|</span>
       <a href="#">Terms of Service</a>
@@ -356,7 +358,7 @@
       submitBtn.textContent = 'Submitting…';
 
       try {
-        const res = await fetch('http://localhost:3001/submit', {
+        const res = await fetch('/api/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
