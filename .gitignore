@@ -1,0 +1,4 @@
+node_modules/
+submissions.db
+*.db-shm
+*.db-wal

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invite a friend in UK to NLP London 2026</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 36px 40px 40px;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* Header */
+    .event-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .event-meta {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* Field group */
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 6px;
+    }
+
+    .field-label .required {
+      color: #c0392b;
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: #111;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    input[type="tel"]::placeholder {
+      color: #9ca3af;
+    }
+
+    input:focus, select:focus {
+      border-color: #3b5bdb;
+      box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.12);
+    }
+
+    /* Phone field wrapper */
+    .phone-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .phone-flag {
+      position: absolute;
+      left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9rem;
+      color: #555;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .phone-flag .flag {
+      font-size: 1.1rem;
+    }
+
+    .phone-flag .chevron {
+      font-size: 0.65rem;
+      color: #888;
+    }
+
+    .phone-wrapper input {
+      padding-left: 72px;
+    }
+
+    /* Email field wrapper */
+    .email-wrapper {
+      position: relative;
+    }
+
+    .email-wrapper .email-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    .email-wrapper input {
+      padding-left: 36px;
+    }
+
+    /* Select dropdown */
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper select {
+      color: #9ca3af;
+    }
+
+    .select-wrapper select.has-value {
+      color: #111;
+    }
+
+    .select-wrapper::after {
+      content: "▾";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #555;
+      font-size: 0.85rem;
+    }
+
+    /* Friend section */
+    .friend-section {
+      margin-bottom: 8px;
+    }
+
+    .friend-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 12px;
+    }
+
+    .friend-title .required {
+      color: #c0392b;
+      margin-left: 2px;
+    }
+
+    .friend-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .friend-row-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .country-note {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #9ca3af;
+      text-transform: uppercase;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 4px 0 20px;
+    }
+
+    /* Submit */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: #3b4fdb;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 28px;
+      transition: background 0.15s;
+    }
+
+    .submit-btn:hover {
+      background: #2d3fc7;
+    }
+
+    .submit-btn:active {
+      background: #2232a8;
+    }
+
+    /* Footer links */
+    .footer-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a {
+      color: #3b7de8;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-links .sep {
+      color: #aaa;
+      margin: 0 6px;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 24px 20px 28px; }
+      .event-title { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <!-- Header -->
+    <h1 class="event-title">Invite a friend in UK to NLP London 2026</h1>
+    <div class="event-meta">
+      May 16, 2026<br>
+      ExceL London
+    </div>
+
+    <form id="inviteForm" novalidate>
+
+      <!-- Your Name -->
+      <div class="field-group">
+        <label class="field-label" for="yourName">Your Name</label>
+        <input type="text" id="yourName" name="yourName" placeholder="Enter your first name" />
+      </div>
+
+      <!-- Your Phone Number -->
+      <div class="field-group">
+        <label class="field-label" for="yourPhone">Your Phone Number <span class="required">*</span></label>
+        <div class="phone-wrapper">
+          <span class="phone-flag">
+            <span class="flag">🇨🇦</span>
+            <span class="chevron">▾</span>
+          </span>
+          <input type="tel" id="yourPhone" name="yourPhone" placeholder="+1 (555) 000-0000" required />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field-group">
+        <label class="field-label" for="yourEmail">Email <span class="required">*</span></label>
+        <div class="email-wrapper">
+          <span class="email-icon">✉</span>
+          <input type="email" id="yourEmail" name="yourEmail" placeholder="your@email.com" required />
+        </div>
+      </div>
+
+      <!-- Campus -->
+      <div class="field-group">
+        <label class="field-label" for="campus">Campus</label>
+        <div class="select-wrapper">
+          <select id="campus" name="campus">
+            <option value="" disabled selected>Select your campus</option>
+            <option value="london">London</option>
+            <option value="manchester">Manchester</option>
+            <option value="birmingham">Birmingham</option>
+            <option value="edinburgh">Edinburgh</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Friends #1–#5 -->
+      <div id="friendsContainer"></div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn">Submit</button>
+
+    </form>
+
+    <!-- Footer -->
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <span class="sep">|</span>
+      <a href="#">Terms of Service</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Render friend sections
+    const container = document.getElementById('friendsContainer');
+    for (let i = 1; i <= 5; i++) {
+      const required = i === 1;
+      container.innerHTML += `
+        <div class="friend-section">
+          <div class="friend-title">
+            Friend #${i}${required ? ' <span class="required">*</span>' : ''}
+          </div>
+          <div class="friend-row">
+            <span class="friend-row-label">Name</span>
+            <input type="text" name="friend${i}_name" placeholder="Value" ${required ? 'required' : ''} />
+          </div>
+          <div class="friend-row">
+            <span class="friend-row-label">Phone</span>
+            <input type="tel" name="friend${i}_phone" placeholder="Value" />
+          </div>
+          <div class="friend-row">
+            <span class="friend-row-label">Email</span>
+            <input type="email" name="friend${i}_email" placeholder="Value" />
+          </div>
+          <p class="country-note">Include Country Code - +44XXXX</p>
+          ${i < 5 ? '<hr />' : ''}
+        </div>
+      `;
+    }
+
+    // Select placeholder color fix
+    const campus = document.getElementById('campus');
+    campus.addEventListener('change', () => {
+      campus.classList.toggle('has-value', campus.value !== '');
+    });
+
+    // Submit handler
+    const form = document.getElementById('inviteForm');
+    const submitBtn = form.querySelector('.submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      try {
+        const res = await fetch('http://localhost:3001/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.error || 'Submission failed.');
+        }
+
+        // Success state
+        form.innerHTML = `
+          <div style="text-align:center; padding: 40px 0;">
+            <div style="font-size:3rem; margin-bottom:16px;">✅</div>
+            <h2 style="color:#1e3a5f; margin-bottom:8px;">You're all set!</h2>
+            <p style="color:#555;">Your invitation has been submitted (ID #${json.id}).<br>We'll be in touch soon.</p>
+          </div>
+        `;
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+        alert('Error: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
