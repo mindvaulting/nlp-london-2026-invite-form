@@ -19,12 +19,23 @@ module.exports = async (req, res) => {
     friend5_name, friend5_phone, friend5_email,
   } = req.body;
 
-  if (!yourPhone || !yourEmail) {
-    return res.status(400).json({ error: 'Phone and email are required.' });
-  }
+  const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || '').trim());
+  const isValidPhone = v => /^\+1[\s.\-()]?\(?\d{3}\)?[\s.\-()]?\d{3}[\s.\-()]?\d{4}$/.test((v || '').trim());
 
-  if (!friend1_name) {
-    return res.status(400).json({ error: 'Friend #1 name is required.' });
+  if (!yourPhone) return res.status(400).json({ error: 'Phone number is required.' });
+  if (!isValidPhone(yourPhone)) return res.status(400).json({ error: 'Invalid phone number format.' });
+  if (!yourEmail) return res.status(400).json({ error: 'Email is required.' });
+  if (!isValidEmail(yourEmail)) return res.status(400).json({ error: 'Invalid email address.' });
+  if (!friend1_name) return res.status(400).json({ error: 'Friend #1 name is required.' });
+
+  const friendPhones = [friend1_phone, friend2_phone, friend3_phone, friend4_phone, friend5_phone];
+  const friendEmails = [friend1_email, friend2_email, friend3_email, friend4_email, friend5_email];
+
+  for (let i = 0; i < 5; i++) {
+    if (friendPhones[i] && !isValidPhone(friendPhones[i]))
+      return res.status(400).json({ error: `Friend #${i + 1} has an invalid phone number.` });
+    if (friendEmails[i] && !isValidEmail(friendEmails[i]))
+      return res.status(400).json({ error: `Friend #${i + 1} has an invalid email address.` });
   }
 
   const { data, error } = await supabase.from('submissions').insert([{

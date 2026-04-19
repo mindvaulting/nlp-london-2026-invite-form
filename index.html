@@ -254,6 +254,22 @@
       margin: 0 6px;
     }
 
+    input.invalid, select.invalid {
+      border-color: #e53e3e;
+      box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.12);
+    }
+
+    .field-error {
+      font-size: 0.78rem;
+      color: #e53e3e;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
     @media (max-width: 480px) {
       .card { padding: 24px 20px 28px; }
       .event-title { font-size: 1.7rem; }
@@ -288,6 +304,7 @@
           </span>
           <input type="tel" id="yourPhone" name="yourPhone" placeholder="+1 (555) 000-0000" required />
         </div>
+        <span class="field-error" id="yourPhone-error">Please enter a valid Canadian phone number (e.g. +1 416 555 0000)</span>
       </div>
 
       <!-- Email -->
@@ -297,6 +314,7 @@
           <span class="email-icon">✉</span>
           <input type="email" id="yourEmail" name="yourEmail" placeholder="your@email.com" required />
         </div>
+        <span class="field-error" id="yourEmail-error">Please enter a valid email address</span>
       </div>
 
 <!-- Friends #1–#5 -->
@@ -330,13 +348,19 @@
             <span class="friend-row-label">Name</span>
             <input type="text" name="friend${i}_name" placeholder="Value" ${required ? 'required' : ''} />
           </div>
-          <div class="friend-row">
-            <span class="friend-row-label">Phone</span>
-            <input type="tel" name="friend${i}_phone" placeholder="Value" />
+          <div class="friend-row" style="align-items:flex-start">
+            <span class="friend-row-label" style="padding-top:10px">Phone</span>
+            <div>
+              <input type="tel" name="friend${i}_phone" placeholder="Value" />
+              <span class="field-error" id="friend${i}_phone-error">Please enter a valid phone number (e.g. +1 416 555 0000)</span>
+            </div>
           </div>
-          <div class="friend-row">
-            <span class="friend-row-label">Email</span>
-            <input type="email" name="friend${i}_email" placeholder="Value" />
+          <div class="friend-row" style="align-items:flex-start">
+            <span class="friend-row-label" style="padding-top:10px">Email</span>
+            <div>
+              <input type="email" name="friend${i}_email" placeholder="Value" />
+              <span class="field-error" id="friend${i}_email-error">Please enter a valid email address</span>
+            </div>
           </div>
           <p class="country-note">Include Country Code - +1XXXXXXXXXX</p>
           ${i < 5 ? '<hr />' : ''}
@@ -344,13 +368,72 @@
       `;
     }
 
-// Submit handler
+    const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    const isValidPhone = v => /^\+1[\s.\-()]?\(?\d{3}\)?[\s.\-()]?\d{3}[\s.\-()]?\d{4}$/.test(v.trim());
+
+    function setError(id, msg) {
+      const el = document.getElementById(id + '-error');
+      const input = document.querySelector(`[name="${id}"], #${id}`);
+      if (el) { el.textContent = msg; el.classList.add('visible'); }
+      if (input) input.classList.add('invalid');
+    }
+
+    function clearError(id) {
+      const el = document.getElementById(id + '-error');
+      const input = document.querySelector(`[name="${id}"], #${id}`);
+      if (el) el.classList.remove('visible');
+      if (input) input.classList.remove('invalid');
+    }
+
+    // Clear errors on input
+    document.addEventListener('input', e => {
+      if (e.target.name) clearError(e.target.name);
+      if (e.target.id)   clearError(e.target.id);
+    });
+
+    function validateForm(data) {
+      let valid = true;
+
+      // Your phone
+      if (!data.yourPhone) {
+        setError('yourPhone', 'Phone number is required'); valid = false;
+      } else if (!isValidPhone(data.yourPhone)) {
+        setError('yourPhone', 'Please enter a valid Canadian phone number (e.g. +1 416 555 0000)'); valid = false;
+      } else clearError('yourPhone');
+
+      // Your email
+      if (!data.yourEmail) {
+        setError('yourEmail', 'Email is required'); valid = false;
+      } else if (!isValidEmail(data.yourEmail)) {
+        setError('yourEmail', 'Please enter a valid email address'); valid = false;
+      } else clearError('yourEmail');
+
+      // Friends
+      for (let i = 1; i <= 5; i++) {
+        const phone = data[`friend${i}_phone`];
+        const email = data[`friend${i}_email`];
+
+        if (phone && !isValidPhone(phone)) {
+          setError(`friend${i}_phone`, 'Please enter a valid phone number (e.g. +1 416 555 0000)'); valid = false;
+        } else clearError(`friend${i}_phone`);
+
+        if (email && !isValidEmail(email)) {
+          setError(`friend${i}_email`, 'Please enter a valid email address'); valid = false;
+        } else clearError(`friend${i}_email`);
+      }
+
+      return valid;
+    }
+
+    // Submit handler
     const form = document.getElementById('inviteForm');
     const submitBtn = form.querySelector('.submit-btn');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form));
+
+      if (!validateForm(data)) return;
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting…';
@@ -365,15 +448,14 @@
         const json = await res.json();
 
         if (!res.ok) {
-          throw new Error(json.detail ? `${json.error} — ${json.detail} (${json.code})` : json.error || 'Submission failed.');
+          throw new Error(json.error || 'Submission failed.');
         }
 
-        // Success state
         form.innerHTML = `
           <div style="text-align:center; padding: 40px 0;">
             <div style="font-size:3rem; margin-bottom:16px;">✅</div>
             <h2 style="color:#1e3a5f; margin-bottom:8px;">You're all set!</h2>
-            <p style="color:#555;">Your invitation has been submitted (ID #${json.id}).<br>We'll be in touch soon.</p>
+            <p style="color:#555;">Your invitation has been submitted.<br>We'll be in touch soon.</p>
           </div>
         `;
       } catch (err) {
