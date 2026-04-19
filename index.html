@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invite a friend in UK to NLP London 2026</title>
+  <title>Invite a friend in UK to NLP Canada 2026</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -264,10 +264,10 @@
   <div class="card">
 
     <!-- Header -->
-    <h1 class="event-title">Invite a friend in UK to NLP London 2026</h1>
+    <h1 class="event-title">Invite a friend in UK to NLP Canada 2026</h1>
     <div class="event-meta">
       May 16, 2026<br>
-      ExceL London
+      Canada
     </div>
 
     <form id="inviteForm" novalidate>
@@ -299,22 +299,7 @@
         </div>
       </div>
 
-      <!-- Campus -->
-      <div class="field-group">
-        <label class="field-label" for="campus">Campus</label>
-        <div class="select-wrapper">
-          <select id="campus" name="campus">
-            <option value="" disabled selected>Select your campus</option>
-            <option value="london">London</option>
-            <option value="manchester">Manchester</option>
-            <option value="birmingham">Birmingham</option>
-            <option value="edinburgh">Edinburgh</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Friends #1–#5 -->
+<!-- Friends #1–#5 -->
       <div id="friendsContainer"></div>
 
       <!-- Submit -->
@@ -359,13 +344,7 @@
       `;
     }
 
-    // Select placeholder color fix
-    const campus = document.getElementById('campus');
-    campus.addEventListener('change', () => {
-      campus.classList.toggle('has-value', campus.value !== '');
-    });
-
-    // Submit handler
+// Submit handler
     const form = document.getElementById('inviteForm');
     const submitBtn = form.querySelector('.submit-btn');
 

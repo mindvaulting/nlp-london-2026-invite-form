@@ -16,7 +16,6 @@ db.exec(`
     your_name  TEXT,
     your_phone TEXT NOT NULL,
     your_email TEXT NOT NULL,
-    campus     TEXT,
     friend1_name  TEXT, friend1_phone TEXT, friend1_email TEXT,
     friend2_name  TEXT, friend2_phone TEXT, friend2_email TEXT,
     friend3_name  TEXT, friend3_phone TEXT, friend3_email TEXT,
@@ -27,14 +26,14 @@ db.exec(`
 
 const insertSubmission = db.prepare(`
   INSERT INTO submissions (
-    your_name, your_phone, your_email, campus,
+    your_name, your_phone, your_email,
     friend1_name, friend1_phone, friend1_email,
     friend2_name, friend2_phone, friend2_email,
     friend3_name, friend3_phone, friend3_email,
     friend4_name, friend4_phone, friend4_email,
     friend5_name, friend5_phone, friend5_email
   ) VALUES (
-    @your_name, @your_phone, @your_email, @campus,
+    @your_name, @your_phone, @your_email,
     @friend1_name, @friend1_phone, @friend1_email,
     @friend2_name, @friend2_phone, @friend2_email,
     @friend3_name, @friend3_phone, @friend3_email,
@@ -53,7 +52,7 @@ app.use(express.static(path.join(__dirname)));
 // Submit form
 app.post('/submit', (req, res) => {
   const {
-    yourName, yourPhone, yourEmail, campus,
+    yourName, yourPhone, yourEmail,
     friend1_name, friend1_phone, friend1_email,
     friend2_name, friend2_phone, friend2_email,
     friend3_name, friend3_phone, friend3_email,
@@ -74,7 +73,6 @@ app.post('/submit', (req, res) => {
       your_name:  yourName  || null,
       your_phone: yourPhone,
       your_email: yourEmail,
-      campus:     campus    || null,
       friend1_name:  friend1_name  || null, friend1_phone: friend1_phone || null, friend1_email: friend1_email || null,
       friend2_name:  friend2_name  || null, friend2_phone: friend2_phone || null, friend2_email: friend2_email || null,
       friend3_name:  friend3_name  || null, friend3_phone: friend3_phone || null, friend3_email: friend3_email || null,
