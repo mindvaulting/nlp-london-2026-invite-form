@@ -20,7 +20,10 @@ module.exports = async (req, res) => {
   } = req.body;
 
   const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || '').trim());
-  const isValidPhone = v => /^\+1[\s.\-()]?\(?\d{3}\)?[\s.\-()]?\d{3}[\s.\-()]?\d{4}$/.test((v || '').trim());
+  const isValidPhone = v => {
+    const digits = (v || '').replace(/\D/g, '');
+    return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+  };
 
   if (!yourPhone) return res.status(400).json({ error: 'Phone number is required.' });
   if (!isValidPhone(yourPhone)) return res.status(400).json({ error: 'Invalid phone number format.' });
