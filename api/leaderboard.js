@@ -20,10 +20,12 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Failed to fetch leaderboard.' });
   }
 
-  // Count non-empty friend names per submission, group by submitter email
+  // Group by normalised email, accumulate friend counts across all submissions
   const map = {};
   for (const row of data) {
-    const key = row.your_email;
+    const key = (row.your_email || '').toLowerCase().trim();
+    if (!key) continue;
+
     const friendCount = [
       row.friend1_name,
       row.friend2_name,
@@ -33,9 +35,15 @@ module.exports = async (req, res) => {
     ].filter(n => n && n.trim() !== '').length;
 
     if (!map[key]) {
-      map[key] = { name: row.your_name || row.your_email, email: row.your_email, friends: 0 };
+      map[key] = {
+        name: (row.your_name || '').trim() || row.your_email,
+        email: row.your_email,
+        friends: 0,
+        submissions: 0,
+      };
     }
     map[key].friends += friendCount;
+    map[key].submissions += 1;
   }
 
   const ranked = Object.values(map)
