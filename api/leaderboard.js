@@ -20,10 +20,11 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Failed to fetch leaderboard.' });
   }
 
-  // Group by normalised email, accumulate friend counts across all submissions
+  // Group by normalised name, accumulate friend counts across all submissions
   const map = {};
   for (const row of data) {
-    const key = (row.your_email || '').toLowerCase().trim();
+    const nameRaw = (row.your_name || '').trim();
+    const key = nameRaw.toLowerCase() || (row.your_email || '').toLowerCase().trim();
     if (!key) continue;
 
     const friendCount = [
@@ -36,7 +37,7 @@ module.exports = async (req, res) => {
 
     if (!map[key]) {
       map[key] = {
-        name: (row.your_name || '').trim() || row.your_email,
+        name: nameRaw || row.your_email,
         email: row.your_email,
         friends: 0,
         submissions: 0,
