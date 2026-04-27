@@ -12,17 +12,27 @@ module.exports = async (req, res) => {
 
   const {
     yourName, yourPhone, yourEmail,
-    friend1_name, friend1_phone, friend1_email,
-    friend2_name, friend2_phone, friend2_email,
-    friend3_name, friend3_phone, friend3_email,
-    friend4_name, friend4_phone, friend4_email,
-    friend5_name, friend5_phone, friend5_email,
+    friend1_name, friend1_phone, friend1_whatsapp, friend1_email,
+    friend2_name, friend2_phone, friend2_whatsapp, friend2_email,
+    friend3_name, friend3_phone, friend3_whatsapp, friend3_email,
+    friend4_name, friend4_phone, friend4_whatsapp, friend4_email,
+    friend5_name, friend5_phone, friend5_whatsapp, friend5_email,
   } = req.body;
 
   const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || '').trim());
+
   const isValidPhone = v => {
-    const digits = (v || '').replace(/\D/g, '');
-    return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+    const d = (v || '').replace(/\D/g, '');
+    return d.length === 10 || (d.length === 11 && d.startsWith('1'));
+  };
+
+  const isValidWhatsApp = v => {
+    const d = (v || '').replace(/\D/g, '');
+    const isCanadian = d.length === 10 || (d.length === 11 && d.startsWith('1'));
+    const isNigerian = (d.length === 13 && d.startsWith('234')) ||
+                       (d.length === 11 && d.startsWith('0')) ||
+                       d.length === 10;
+    return isCanadian || isNigerian;
   };
 
   if (!yourPhone) return res.status(400).json({ error: 'Phone number is required.' });
@@ -31,13 +41,25 @@ module.exports = async (req, res) => {
   if (!isValidEmail(yourEmail)) return res.status(400).json({ error: 'Invalid email address.' });
   if (!friend1_name) return res.status(400).json({ error: 'Friend #1 name is required.' });
 
-  const friendPhones = [friend1_phone, friend2_phone, friend3_phone, friend4_phone, friend5_phone];
-  const friendEmails = [friend1_email, friend2_email, friend3_email, friend4_email, friend5_email];
+  const friends = [
+    { name: friend1_name, phone: friend1_phone, whatsapp: friend1_whatsapp, email: friend1_email },
+    { name: friend2_name, phone: friend2_phone, whatsapp: friend2_whatsapp, email: friend2_email },
+    { name: friend3_name, phone: friend3_phone, whatsapp: friend3_whatsapp, email: friend3_email },
+    { name: friend4_name, phone: friend4_phone, whatsapp: friend4_whatsapp, email: friend4_email },
+    { name: friend5_name, phone: friend5_phone, whatsapp: friend5_whatsapp, email: friend5_email },
+  ];
 
   for (let i = 0; i < 5; i++) {
-    if (friendPhones[i] && !isValidPhone(friendPhones[i]))
+    const { name, phone, whatsapp, email } = friends[i];
+    if (name) {
+      if (!phone && !whatsapp)
+        return res.status(400).json({ error: `Friend #${i + 1} requires a phone or WhatsApp number.` });
+    }
+    if (phone && !isValidPhone(phone))
       return res.status(400).json({ error: `Friend #${i + 1} has an invalid phone number.` });
-    if (friendEmails[i] && !isValidEmail(friendEmails[i]))
+    if (whatsapp && !isValidWhatsApp(whatsapp))
+      return res.status(400).json({ error: `Friend #${i + 1} has an invalid WhatsApp number.` });
+    if (email && !isValidEmail(email))
       return res.status(400).json({ error: `Friend #${i + 1} has an invalid email address.` });
   }
 
@@ -45,11 +67,11 @@ module.exports = async (req, res) => {
     your_name:  yourName  || null,
     your_phone: yourPhone,
     your_email: yourEmail,
-    friend1_name,  friend1_phone,  friend1_email,
-    friend2_name,  friend2_phone,  friend2_email,
-    friend3_name,  friend3_phone,  friend3_email,
-    friend4_name,  friend4_phone,  friend4_email,
-    friend5_name,  friend5_phone,  friend5_email,
+    friend1_name, friend1_phone, friend1_whatsapp, friend1_email,
+    friend2_name, friend2_phone, friend2_whatsapp, friend2_email,
+    friend3_name, friend3_phone, friend3_whatsapp, friend3_email,
+    friend4_name, friend4_phone, friend4_whatsapp, friend4_email,
+    friend5_name, friend5_phone, friend5_whatsapp, friend5_email,
   }]).select('id').single();
 
   if (error) {

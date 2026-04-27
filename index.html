@@ -351,8 +351,15 @@
           <div class="friend-row" style="align-items:flex-start">
             <span class="friend-row-label" style="padding-top:10px">Phone</span>
             <div>
-              <input type="tel" name="friend${i}_phone" placeholder="Value" />
-              <span class="field-error" id="friend${i}_phone-error">Please enter a valid phone number (e.g. +1 416 555 0000)</span>
+              <input type="tel" name="friend${i}_phone" placeholder="e.g. +1 416 555 0000" />
+              <span class="field-error" id="friend${i}_phone-error"></span>
+            </div>
+          </div>
+          <div class="friend-row" style="align-items:flex-start">
+            <span class="friend-row-label" style="padding-top:10px">WhatsApp</span>
+            <div>
+              <input type="tel" name="friend${i}_whatsapp" placeholder="e.g. +1 416 555 0000 or +234 803 123 4567" />
+              <span class="field-error" id="friend${i}_whatsapp-error"></span>
             </div>
           </div>
           <div class="friend-row" style="align-items:flex-start">
@@ -362,17 +369,28 @@
               <span class="field-error" id="friend${i}_email-error">Please enter a valid email address</span>
             </div>
           </div>
-          <p class="country-note">Include Country Code - +1XXXXXXXXXX</p>
+          <p class="country-note">Phone/WhatsApp: Canadian (+1) or Nigerian (+234) numbers accepted</p>
           ${i < 5 ? '<hr />' : ''}
         </div>
       `;
     }
 
     const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+    // Canadian: 10 digits or 11 starting with 1
     const isValidPhone = v => {
-      const digits = (v || '').replace(/\D/g, '');
-      // Accept 10 digits (local) or 11 digits starting with 1 (with country code)
-      return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+      const d = (v || '').replace(/\D/g, '');
+      return d.length === 10 || (d.length === 11 && d.startsWith('1'));
+    };
+
+    // Canadian (+1) OR Nigerian (+234) whatsapp numbers
+    const isValidWhatsApp = v => {
+      const d = (v || '').replace(/\D/g, '');
+      const isCanadian = d.length === 10 || (d.length === 11 && d.startsWith('1'));
+      const isNigerian = (d.length === 13 && d.startsWith('234')) ||
+                         (d.length === 11 && d.startsWith('0')) ||
+                         d.length === 10;
+      return isCanadian || isNigerian;
     };
 
     function setError(id, msg) {
@@ -414,12 +432,32 @@
 
       // Friends
       for (let i = 1; i <= 5; i++) {
-        const phone = data[`friend${i}_phone`];
-        const email = data[`friend${i}_email`];
+        const name     = data[`friend${i}_name`];
+        const phone    = data[`friend${i}_phone`];
+        const whatsapp = data[`friend${i}_whatsapp`];
+        const email    = data[`friend${i}_email`];
 
-        if (phone && !isValidPhone(phone)) {
-          setError(`friend${i}_phone`, 'Please enter a valid phone number (e.g. +1 416 555 0000)'); valid = false;
-        } else clearError(`friend${i}_phone`);
+        // If this friend has a name, require at least phone or whatsapp
+        if (name) {
+          const hasPhone    = phone    && phone.trim();
+          const hasWhatsApp = whatsapp && whatsapp.trim();
+          if (!hasPhone && !hasWhatsApp) {
+            setError(`friend${i}_phone`, 'Please enter a phone or WhatsApp number'); valid = false;
+            setError(`friend${i}_whatsapp`, 'Please enter a phone or WhatsApp number'); valid = false;
+          } else {
+            clearError(`friend${i}_phone`);
+            clearError(`friend${i}_whatsapp`);
+          }
+        }
+
+        // Validate formats if filled
+        if (phone && phone.trim() && !isValidPhone(phone)) {
+          setError(`friend${i}_phone`, 'Enter a valid Canadian number (e.g. +1 416 555 0000)'); valid = false;
+        }
+
+        if (whatsapp && whatsapp.trim() && !isValidWhatsApp(whatsapp)) {
+          setError(`friend${i}_whatsapp`, 'Enter a valid Canadian (+1) or Nigerian (+234) number'); valid = false;
+        }
 
         if (email && !isValidEmail(email)) {
           setError(`friend${i}_email`, 'Please enter a valid email address'); valid = false;
